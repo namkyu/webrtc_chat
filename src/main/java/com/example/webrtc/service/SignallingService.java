@@ -38,9 +38,6 @@ public class SignallingService {
     public void sendMsg(List<User> sessions, WebSocketSession session, TextMessage message) {
         for (User user : sessions) {
             WebSocketSession webSocketSession = user.getSession();
-            String savedSessionId = webSocketSession.getId();
-            boolean open = webSocketSession.isOpen();
-            log.info("saved sessionId : {}, open : {}", savedSessionId, open);
             if (webSocketSession.isOpen() && session.getId().equals(webSocketSession.getId()) == false) {
                 sendMessage(webSocketSession, message);
             }

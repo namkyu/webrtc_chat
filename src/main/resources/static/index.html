@@ -99,7 +99,7 @@
         <div class="wrap">
             <span class="contact-status online"></span>
             <img src="user.png" />
-            <div class="meta" onclick="createOffer()">
+            <div class="meta" onclick="WebRTC.createOffer()">
                 <p class="name"></p>
                 <p class="preview">...</p>
             </div>
@@ -110,6 +110,9 @@
 <script>
 
     $(document).ready(function() {
+
+        // 초기화
+        WebRTC.init();
 
         $(".messages").animate({
             scrollTop: $(document).height()
@@ -148,13 +151,13 @@
         });
 
         $('.submit').click(function () {
-            var message = $("#msg").val();
+            let message = $("#msg").val();
             newMessage("sent", message);
         });
 
         $(window).on('keydown', function (e) {
             if (e.which == 13) {
-                var message = $("#msg").val();
+                let message = $("#msg").val();
                 newMessage("sent", message);
                 return;
             }
@@ -168,7 +171,7 @@
 
         // send message to peer
         if (msgType == "sent") {
-            if (sendMessage(message) == false) {
+            if (WebRTC.sendMessage(message) == false) {
                 return;
             }
         }
