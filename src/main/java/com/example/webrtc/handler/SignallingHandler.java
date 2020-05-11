@@ -46,6 +46,13 @@ public class SignallingHandler extends TextWebSocketHandler {
         Message msgInfo = objectMapper.readValue(payload, Message.class);
         String event = msgInfo.getEvent();
 
+        // 이름 셋팅
+        users.forEach(user -> {
+            if (user.getSession() == session) {
+                user.setUserName(msgInfo.getName());
+            }
+        });
+
         // 방 입장
         if (EventType.JOIN.getName().equals(event)) {
             signallingService.join(users, session, msgInfo);
@@ -65,7 +72,6 @@ public class SignallingHandler extends TextWebSocketHandler {
         User user = new User();
         user.setSession(session);
         user.setSessionId(session.getId());
-        user.setUserName("User" + seq.incrementAndGet());
         user.setRemoteAddress(session.getRemoteAddress());
         user.setTextMessageSizeLimit(session.getTextMessageSizeLimit());
         users.add(user);

@@ -99,8 +99,9 @@
         <div class="wrap">
             <span class="contact-status online"></span>
             <img src="user.png" />
-            <div class="meta">
-                <p class="name" onclick="createOffer()"></p>
+            <div class="meta" onclick="createOffer()">
+                <p class="name"></p>
+                <p class="preview">...</p>
             </div>
         </div>
     </li>
@@ -155,23 +156,27 @@
             if (e.which == 13) {
                 var message = $("#msg").val();
                 newMessage("sent", message);
-                return false;
+                return;
             }
         });
     });
 
     function newMessage(msgType, message) {
         if ($.trim(message) == '') {
-            return false;
+            return;
         }
+
+        // send message to peer
+        if (msgType == "sent") {
+            if (sendMessage(message) == false) {
+                return;
+            }
+        }
+
         $('<li class="' + msgType + '"><img src="me.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
         $('.message-input input').val(null);
         $('.contact.active .preview').html('<span>You: </span>' + message);
         $(".messages").animate({scrollTop: $(document).height()}, "fast");
-
-        if (msgType == "sent") {
-            sendMessage(message); // send message to peer
-        }
     }
 
 </script>

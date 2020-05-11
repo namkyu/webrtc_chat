@@ -1,4 +1,5 @@
 
+
 // connecting to our signaling server
 var webSocketConn = new WebSocket('ws://172.18.97.21:8080/socket');
 
@@ -7,6 +8,9 @@ var peerConnection;
 
 // 음성 및 영상 데이터가 아닌 json/text 데이터들을 주고 받는 것을 담당
 var dataChannel;
+
+var myName;
+var EMPTY = "";
 
 // ------------------------------------------------------------
 // 웹소켓
@@ -90,6 +94,14 @@ function handleOffer(offer) {
 // common function
 // ------------------------------------------------------------
 function initialize() {
+    myName = prompt("이름을 입력해주세요. : ", EMPTY);
+    if (myName == EMPTY) {
+        alert("이름을 입력하셔야 합니다.");
+        return;
+    }
+
+    $(".wrap > p").text(myName);
+
     var configuration = {
         "iceServers": [{
             "url": "stun:stun2.1.google.com:19302"
@@ -143,12 +155,15 @@ function initialize() {
     };
 
     // join
-    send({ event: "join" });
+    send({
+        event: "join",
+        name: myName
+    });
 }
 
 function sendMessage(msg) {
     if (dataChannel.readyState != "open") {
-        alert("peer to peer 연결이 원할하지 않습니다. 다시 시도해주세요.");
+        alert("peer to peer 연결이 원할하지 않습니다. 다시 연결 시도해주세요.");
         return;
     }
 
@@ -173,7 +188,8 @@ function handleJoin(content) {
             var remoteAddress = user.remoteAddress;
             var contact = $('#template > .contact');
             var newContact = contact.clone();
-            newContact.find(".name").text(remoteAddress);
+            newContact.find(".name").text(userName);
+            newContact.find(".preview").text(remoteAddress);
             $(newContact).appendTo(contantParent);
         });
     }
