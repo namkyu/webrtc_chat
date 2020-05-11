@@ -34,17 +34,17 @@ let WebRTC = (function () {
             let data = content.data;
 
             switch (content.event) {
-                case "offer":
+                case "join": // 참여
+                    handleJoin(content);
+                    break;
+                case "offer": // 제안
                     handleOffer(data);
                     break;
-                case "answer":
+                case "answer": // 수락
                     handleAnswer(data);
                     break;
-                case "candidate":
+                case "candidate": // 연결
                     handleCandidate(data);
-                    break;
-                case "join":
-                    handleJoin(content);
                     break;
                 default:
                     break;
@@ -53,7 +53,7 @@ let WebRTC = (function () {
 
         let configuration = {
             "iceServers": [{
-                "url": "stun:stun2.1.google.com:19302"
+                "url": "stun:stun01.sipphone.com"
             }]
         };
 
@@ -72,7 +72,6 @@ let WebRTC = (function () {
             }
         };
 
-        // creating data channel
         dataChannel = peerConnection.createDataChannel("dataChannel", {
             reliable: true
         });
@@ -131,7 +130,7 @@ let WebRTC = (function () {
 
     let createOffer = function () {
         if (confirm("Peer와 연결하시겠습니까?")) {
-            peerConnection.createOffer(function (offer) {
+            peerConnection.createOffer(function (offer) { // 신호를 보내는 쪽의 SDP 생성
                 send({
                     event: "offer",
                     data: offer
@@ -139,7 +138,7 @@ let WebRTC = (function () {
                 peerConnection.setLocalDescription(offer);
                 console.log(offer.sdp);
             }, function (error) {
-                alert("Error creating an offer");
+                alert("Error creating an offer : " + error);
             });
         }
     };
@@ -149,20 +148,20 @@ let WebRTC = (function () {
     // ----------------------------------------------
     let handleOffer = function (offer) {
         peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        peerConnection.createAnswer(function (answer) { // create and send an answer to an offer
+        peerConnection.createAnswer(function (answer) { // 신호를 받는 쪽의 SDP 생성
             peerConnection.setLocalDescription(answer);
             send({
                 event: "answer",
                 data: answer
             });
         }, function (error) {
-            alert("Error creating an answer");
+            alert("Error creating an answer : " + error);
         });
     };
 
     let handleAnswer = function (answer) {
         peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-        console.log("connection established successfully!!");
+        console.log("connection established successfully!!"); // peer 간에 통신이 가능한 상태
     };
 
     let handleCandidate = function (candidate) {
