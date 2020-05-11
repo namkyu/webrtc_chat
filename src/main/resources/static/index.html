@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class=''>
+<head>
+    <meta charset='UTF-8'>
+    <meta name="robots" content="noindex">
+
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="nkleeChat.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://use.typekit.net/hoy3lrg.js"></script>
+    <script src="nkleeChat.js"></script>
+    <script>
+    try {
+        Typekit.load({async: true});
+    } catch (e) {
+    }
+    </script>
+
+</head>
+
+<body>
+
+<div id="frame">
+    <div id="sidepanel">
+        <div id="profile">
+            <div class="wrap">
+                <img id="profile-img" src="chat.png" class="online" alt=""/>
+                <p>홍길동</p>
+                <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+                <div id="status-options">
+                    <ul>
+                        <li id="status-online" class="active">
+                            <span class="status-circle"></span>
+                            <p>Online</p>
+                        </li>
+                        <li id="status-away">
+                            <span class="status-circle"></span>
+                            <p>Away</p>
+                        </li>
+                        <li id="status-busy">
+                            <span class="status-circle"></span>
+                            <p>Busy</p>
+                        </li>
+                        <li id="status-offline">
+                            <span class="status-circle"></span>
+                            <p>Offline</p>
+                        </li>
+                    </ul>
+                </div>
+                <div id="expanded">
+                    <label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
+                    <input name="twitter" type="text" value="mikeross"/>
+                    <label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
+                    <input name="twitter" type="text" value="ross81"/>
+                    <label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
+                    <input name="twitter" type="text" value="mike.ross"/>
+                </div>
+            </div>
+        </div>
+        <div id="search">
+            <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+            <input type="text" placeholder="Search contacts..."/>
+        </div>
+        <div id="contacts">
+            <ul>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <div class="contact-profile">
+            <img src="chat.png" alt=""/>
+            <p>홍길동</p>
+            <div class="social-media">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="messages">
+            <ul>
+            </ul>
+        </div>
+        <div class="message-input">
+            <div class="wrap">
+                <input type="text" id="msg" placeholder="Write your message..."/>
+                <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="template" style="display: none">
+    <li class="contact">
+        <div class="wrap">
+            <span class="contact-status online"></span>
+            <img src="user.png" />
+            <div class="meta">
+                <p class="name" onclick="createOffer()"></p>
+            </div>
+        </div>
+    </li>
+</div>
+
+<script>
+
+    $(document).ready(function() {
+
+        $(".messages").animate({
+            scrollTop: $(document).height()
+        }, "fast");
+
+        $("#profile-img").click(function () {
+            $("#status-options").toggleClass("active");
+        });
+
+        $(".expand-button").click(function () {
+            $("#profile").toggleClass("expanded");
+            $("#contacts").toggleClass("expanded");
+        });
+
+        $("#status-options ul li").click(function () {
+            $("#profile-img").removeClass();
+            $("#status-online").removeClass("active");
+            $("#status-away").removeClass("active");
+            $("#status-busy").removeClass("active");
+            $("#status-offline").removeClass("active");
+            $(this).addClass("active");
+
+            if ($("#status-online").hasClass("active")) {
+                $("#profile-img").addClass("online");
+            } else if ($("#status-away").hasClass("active")) {
+                $("#profile-img").addClass("away");
+            } else if ($("#status-busy").hasClass("active")) {
+                $("#profile-img").addClass("busy");
+            } else if ($("#status-offline").hasClass("active")) {
+                $("#profile-img").addClass("offline");
+            } else {
+                $("#profile-img").removeClass();
+            };
+
+            $("#status-options").removeClass("active");
+        });
+
+        $('.submit').click(function () {
+            var message = $("#msg").val();
+            newMessage("sent", message);
+        });
+
+        $(window).on('keydown', function (e) {
+            if (e.which == 13) {
+                var message = $("#msg").val();
+                newMessage("sent", message);
+                return false;
+            }
+        });
+    });
+
+    function newMessage(msgType, message) {
+        if ($.trim(message) == '') {
+            return false;
+        }
+        $('<li class="' + msgType + '"><img src="me.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+        $('.message-input input').val(null);
+        $('.contact.active .preview').html('<span>You: </span>' + message);
+        $(".messages").animate({scrollTop: $(document).height()}, "fast");
+
+        if (msgType == "sent") {
+            sendMessage(message); // send message to peer
+        }
+    }
+
+</script>
+</body>
+</html>
