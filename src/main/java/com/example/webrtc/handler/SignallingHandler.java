@@ -5,7 +5,6 @@ import com.example.webrtc.dto.Message;
 import com.example.webrtc.dto.User;
 import com.example.webrtc.service.SignallingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,11 +45,7 @@ public class SignallingHandler extends TextWebSocketHandler {
         String event = msgInfo.getEvent();
 
         // 이름 셋팅
-        users.forEach(user -> {
-            if (user.getSession() == session) {
-                user.setUserName(msgInfo.getName());
-            }
-        });
+        setUserName(session, msgInfo.getName());
 
         // 방 입장
         if (EventType.JOIN.getName().equals(event)) {
@@ -75,12 +69,19 @@ public class SignallingHandler extends TextWebSocketHandler {
         user.setRemoteAddress(session.getRemoteAddress());
         user.setTextMessageSizeLimit(session.getTextMessageSizeLimit());
         users.add(user);
-
         users.forEach(System.out::println);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         users.removeIf(user -> user.getSession().equals(session));
+    }
+
+    private void setUserName(WebSocketSession session, String userName) {
+        users.forEach(user -> {
+            if (user.getSession() == session) {
+                user.setUserName(userName);
+            }
+        });
     }
 }

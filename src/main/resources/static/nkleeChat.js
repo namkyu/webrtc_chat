@@ -88,7 +88,6 @@ let WebRTC = (function () {
             console.log("Error occured on datachannel:", error);
         };
 
-        // when we receive a message from the other peer, printing it on the console
         dataChannel.onmessage = function (event) { // 받는 메세지
             let message = event.data;
             console.log("message:", message);
@@ -126,7 +125,6 @@ let WebRTC = (function () {
     let send = function (message) {
         webSocketConn.send(JSON.stringify(message));
     };
-
 
     let createOffer = function () {
         if (confirm("Peer와 연결하시겠습니까?")) {
@@ -194,7 +192,6 @@ let WebRTC = (function () {
         dataChannel.send(msg);
     };
 
-
     return {
         init: init,
         sendMessage: sendMessage,
@@ -202,13 +199,3 @@ let WebRTC = (function () {
     }
 
 })();
-
-
-
-
-
-
-
-
-
-
