@@ -53,7 +53,7 @@ let WebRTC = (function () {
 
         let configuration = {
             "iceServers": [{
-                "url": "stun:stun01.sipphone.com"
+                "url": "stun:stun2.1.google.com:19302"
             }]
         };
 
