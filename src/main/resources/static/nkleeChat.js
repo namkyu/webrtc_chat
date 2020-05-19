@@ -65,7 +65,7 @@ let WebRTC = (function () {
 
         peerConnection.onicecandidate = function (event) {
             if (event.candidate) {
-                send({
+                sendMsg({
                     event: "candidate",
                     data: event.candidate
                 });
@@ -99,7 +99,7 @@ let WebRTC = (function () {
         };
 
         // join
-        send({
+        sendMsg({
             event: "join",
             name: myName
         });
@@ -122,14 +122,14 @@ let WebRTC = (function () {
     // ----------------------------------------------
     // WebSocket 메세지 전송
     // ----------------------------------------------
-    let send = function (message) {
+    let sendMsg = function (message) {
         webSocketConn.send(JSON.stringify(message));
     };
 
     let createOffer = function () {
         if (confirm("Peer와 연결하시겠습니까?")) {
             peerConnection.createOffer(function (offer) { // 신호를 보내는 쪽의 SDP 생성
-                send({
+                sendMsg({
                     event: "offer",
                     data: offer
                 });
@@ -148,7 +148,7 @@ let WebRTC = (function () {
         peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         peerConnection.createAnswer(function (answer) { // 신호를 받는 쪽의 SDP 생성
             peerConnection.setLocalDescription(answer);
-            send({
+            sendMsg({
                 event: "answer",
                 data: answer
             });

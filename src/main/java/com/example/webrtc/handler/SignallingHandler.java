@@ -69,6 +69,8 @@ public class SignallingHandler extends TextWebSocketHandler {
         user.setRemoteAddress(session.getRemoteAddress());
         user.setTextMessageSizeLimit(session.getTextMessageSizeLimit());
         users.add(user);
+
+        System.out.println("=================================");
         users.forEach(System.out::println);
     }
 
