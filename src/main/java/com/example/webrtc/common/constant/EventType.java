@@ -4,7 +4,11 @@ import lombok.Getter;
 
 public enum EventType {
 
-    OFFER("offer"), ANSWER("answer"), JOIN("join");
+    OFFER("offer")
+    , ANSWER("answer")
+    , JOIN("join")
+    , CANDIDATE("candidate")
+    ;
 
     @Getter
     private String name;

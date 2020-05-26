@@ -59,6 +59,10 @@ public class SignallingHandler extends TextWebSocketHandler {
         else if (EventType.ANSWER.getName().equals(event)) {
             signallingService.sendMsg(users, session, message);
         }
+        // ICE Candidate
+        else if (EventType.CANDIDATE.getName().equals(event)) {
+            signallingService.sendMsg(users, session, message);
+        }
     }
 
     @Override

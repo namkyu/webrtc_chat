@@ -44,6 +44,7 @@ let WebRTC = (function () {
                     handleAnswer(data);
                     break;
                 case "candidate": // 연결
+                    alert("onmessage candidate");
                     handleCandidate(data);
                     break;
                 default:
@@ -64,6 +65,7 @@ let WebRTC = (function () {
         });
 
         peerConnection.onicecandidate = function (event) {
+            alert("onicecandidate");
             if (event.candidate) {
                 sendMsg({
                     event: "candidate",
@@ -123,7 +125,25 @@ let WebRTC = (function () {
     // WebSocket 메세지 전송
     // ----------------------------------------------
     let sendMsg = function (message) {
-        webSocketConn.send(JSON.stringify(message));
+        waitForConnection(function () {
+            webSocketConn.send(JSON.stringify(message));
+        }, 1000);
+    };
+
+    // [readyState]
+    // 0 : CONNECTING 소켓이 생성, 연결은 아직 안된 상태
+    // 1 : OPEN	연결되었고, 통신할 준비가 되었다.
+    // 2 : CLOSING 연결이 닫히는 중
+    // 3 : CLOSED 연결이 닫힘
+    // Uncaught InvalidStateError: Failed to execute 'send' on 'WebSocket': Still in CONNECTING state 오류가 발생하는 것을 방지하기 위해서
+    let waitForConnection = function (callback, interval) {
+        if (webSocketConn.readyState === 1) { // 연결
+            callback();
+        } else {
+            setTimeout(function () {
+                waitForConnection(callback, interval);
+            }, interval);
+        }
     };
 
     let createOffer = function () {
