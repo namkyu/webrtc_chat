@@ -5,15 +5,13 @@ import com.example.webrtc.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 
 /**
- * @Project : test_webrtc
- * @Date : 2020-05-08
+ * @Project : webrtc
+ * @Date : 2020-05-27
  * @Author : nklee
  * @Description :
  */
@@ -21,22 +19,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequestMapping("/chat")
 public class ChatRoomController {
 
-    private AtomicInteger seq = new AtomicInteger(0);
-
     @Autowired
-    private ChatRoomRepository repository;
+    private ChatRoomRepository chatRoomRepository;
 
-    @GetMapping("/rooms")
-    public String rooms(Model model) {
-        model.addAttribute("rooms", repository.getChatRooms());
-        return "/chat/room-list";
+    @GetMapping("/room")
+    public String rooms() {
+        return "/chat/room";
     }
 
-    @GetMapping("/rooms/{id}")
-    public String room(@PathVariable String id, Model model) {
-        ChatRoom room = repository.getChatRoom(id);
-        model.addAttribute("room", room);
-        model.addAttribute("member", "member" + seq.incrementAndGet());
-        return "/chat/room";
+    @GetMapping("/rooms")
+    @ResponseBody
+    public List<ChatRoom> room() {
+        return chatRoomRepository.findAllRoom();
+    }
+
+    @PostMapping("/room")
+    @ResponseBody
+    public ChatRoom createRoom(@RequestParam String name) {
+        return chatRoomRepository.createChatRoom(name);
+    }
+
+    @GetMapping("/room/enter/{roomId}")
+    public String roomDetail(Model model, @PathVariable String roomId) {
+        model.addAttribute("roomId", roomId);
+        return "/chat/roomDetail";
+    }
+
+    @GetMapping("/room/{roomId}")
+    @ResponseBody
+    public ChatRoom roomInfo(@PathVariable String roomId) {
+        return chatRoomRepository.findRoomById(roomId);
     }
 }

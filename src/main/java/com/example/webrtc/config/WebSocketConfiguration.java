@@ -8,7 +8,6 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 
-
 /**
  * @Project : test_webrtc
  * @Date : 2020-04-27

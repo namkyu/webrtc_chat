@@ -44,7 +44,6 @@ let WebRTC = (function () {
                     handleAnswer(data);
                     break;
                 case "candidate": // 연결
-                    alert("onmessage candidate");
                     handleCandidate(data);
                     break;
                 default:
@@ -65,7 +64,6 @@ let WebRTC = (function () {
         });
 
         peerConnection.onicecandidate = function (event) {
-            alert("onicecandidate");
             if (event.candidate) {
                 sendMsg({
                     event: "candidate",
@@ -167,11 +165,12 @@ let WebRTC = (function () {
     let handleOffer = function (offer) {
         peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         peerConnection.createAnswer(function (answer) { // 신호를 받는 쪽의 SDP 생성
-            peerConnection.setLocalDescription(answer);
             sendMsg({
                 event: "answer",
                 data: answer
             });
+            peerConnection.setLocalDescription(answer);
+            console.log(answer.sdp);
         }, function (error) {
             alert("Error creating an answer : " + error);
         });

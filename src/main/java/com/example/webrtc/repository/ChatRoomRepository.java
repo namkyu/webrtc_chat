@@ -3,35 +3,40 @@ package com.example.webrtc.repository;
 import com.example.webrtc.dto.ChatRoom;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 /**
- * @Project : test_webrtc
- * @Date : 2020-05-08
+ * @Project : webrtc
+ * @Date : 2020-05-27
  * @Author : nklee
  * @Description :
  */
 @Repository
 public class ChatRoomRepository {
-    private final Map<String, ChatRoom> chatRoomMap;
 
-    public ChatRoomRepository() {
-        chatRoomMap = Collections.unmodifiableMap(
-                Stream.of(ChatRoom.create("1번방"), ChatRoom.create("2번방"), ChatRoom.create("3번방"))
-                        .collect(Collectors.toMap(ChatRoom::getId, Function.identity())));
+    private Map<String, ChatRoom> chatRoomMap;
+
+    @PostConstruct
+    private void init() {
+        chatRoomMap = new LinkedHashMap<>();
     }
 
-    public ChatRoom getChatRoom(String id) {
+    public List<ChatRoom> findAllRoom() {
+        // 채팅방 생성순서 최근 순으로 반환
+        List chatRooms = new ArrayList<>(chatRoomMap.values());
+        Collections.reverse(chatRooms);
+        return chatRooms;
+    }
+
+    public ChatRoom findRoomById(String id) {
         return chatRoomMap.get(id);
     }
 
-    public Collection<ChatRoom> getChatRooms() {
-        return chatRoomMap.values();
+    public ChatRoom createChatRoom(String name) {
+        ChatRoom chatRoom = ChatRoom.create(name);
+        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
+        return chatRoom;
     }
 
 }
