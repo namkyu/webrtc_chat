@@ -73,7 +73,7 @@
             },
             enterRoom: function (roomId) {
                 let sender = prompt('대화명을 입력해 주세요.');
-                localStorage.setItem('wschat.sender', sender);
+                localStorage.setItem('wschat.sender', sender); // HTML5 에서 나오는 로컬 스토리지
                 localStorage.setItem('wschat.roomId', roomId);
                 location.href = "/chat/room/enter/" + roomId;
             }
