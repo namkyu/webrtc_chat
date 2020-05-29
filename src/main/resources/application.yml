@@ -7,3 +7,6 @@ spring:
       enabled: false
   freemarker:
     cache: false
+  rabbitmq:
+    host: localhost
+    port: 61613
