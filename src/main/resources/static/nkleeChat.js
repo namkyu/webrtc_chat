@@ -52,8 +52,12 @@ let WebRTC = (function () {
         };
 
         let configuration = {
-            "iceServers": [{
-                "url": "stun:stun2.l.google.com:19302"
+            iceServers: [{
+                urls: ["turn:numb.viagenie.ca"],
+                username: "webrtc@live.com",
+                credential: "muazkh"
+            }, {
+                urls: "stun:stun2.l.google.com:19302"
             }]
         };
 
