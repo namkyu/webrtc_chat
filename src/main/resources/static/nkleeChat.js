@@ -67,11 +67,21 @@ let WebRTC = (function () {
             }]
         });
 
+
+        let candidateList = [];
         peerConnection.onicecandidate = function (event) {
+            let iceState = peerConnection.iceGatheringState;
+            console.log("iceGatheringState : " + iceState);
             if (event.candidate) {
-                sendMsg({
-                    event: "candidate",
-                    data: event.candidate
+                candidateList.push(event.candidate);
+            }
+
+            if (iceState == "complete") {
+                candidateList.forEach(candidate => {
+                    sendMsg({
+                        event: "candidate",
+                        data: candidate
+                    });
                 });
             }
         };

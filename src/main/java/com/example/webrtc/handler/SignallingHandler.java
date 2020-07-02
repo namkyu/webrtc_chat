@@ -47,6 +47,8 @@ public class SignallingHandler extends TextWebSocketHandler {
         // 이름 셋팅
         setUserName(session, msgInfo.getName());
 
+        log.info("event : " + event);
+
         // 방 입장
         if (EventType.JOIN.getName().equals(event)) {
             signallingService.join(users, session, msgInfo);
